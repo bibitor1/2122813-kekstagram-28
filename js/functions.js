@@ -1,33 +1,35 @@
-const isLong = (string, number) => string.length <= number;
-isLong('Я ничего не понимаю', 10);
+const isTheStringLonger = (str, num) => str.length <= num;
+isTheStringLonger('Я ничего не понимаю', 10);
 
-const isPalindrom = (string) => {
-  string = string.toLowerCase().replace(/ /g,'');
-  return string === string.split('').reverse().join('');
+const isPalindrom = (str) => {
+  str = str.toLowerCase().replace(/ /g,'');
+  return str === str.split('').reverse().join('');
 };
 isPalindrom('ТоПот');
 
-const getNumbers = (string) => {
-  if (typeof string === 'number') {
-    return string;
+const getNumbers = (str) => {
+  if (typeof str === 'number') {
+    return str;
   }
 
-  let str = '';
-  for (let i = 0; i < string.length; i++) {
-    if (!Number.isNaN(parseInt(string[i], 10))) {
-      str += string[i];
+  let newStr = '';
+
+  for (const i in str) {
+    if (!Number.isNaN(parseInt(str[i], 10))) {
+      newStr += str[i];
     }
   }
-  return parseInt(str, 10);
+  return parseInt(newStr, 10);
 };
 getNumbers('2023 год');
 
-const addSmth = (string, minLength, piece) => {
-  if (string.length >= minLength) {
-    return string;
+const addSymbolsToString = (str, minLength, piece) => {
+  if (str.length >= minLength) {
+    return str;
   }
 
-  const newPiece = minLength - string.length;
-  return piece.slice(0, newPiece % piece.length) + piece.repeat(newPiece / piece.length) + string;
+  const newPiece = minLength - str.length;
+
+  return piece.slice(0, newPiece % piece.length) + piece.repeat(newPiece / piece.length) + str;
 };
-addSmth('q', 4, 'we');
+addSymbolsToString('q', 4, 'we');
