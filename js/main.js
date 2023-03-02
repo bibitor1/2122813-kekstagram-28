@@ -1,8 +1,7 @@
-const FOTO_COUNT = 25;
-const AVATAR_COUNT = 6;
-const LIKE_MIN_COUNT = 15;
-const LIKE_MAX_COUNT = 200;
-const COMMENT_COUNT = 20;
+const MAX_AVATAR_ID = 6;
+const MIN_LIKES = 15;
+const MAX_LIKES = 200;
+const MAX_COMMENTS = 20;
 const DESCRIPTIONS = [
   'Это я в Париже',
   'Это я с Мамой',
@@ -14,7 +13,7 @@ const DESCRIPTIONS = [
   'Это я на тренировке',
   'Это я в кино',
 ];
-const COMMENT_LINES = [
+const COMMENTS = [
   'Всё отлично!',
   'В целом всё неплохо. Но не всё.',
   'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.',
@@ -38,43 +37,33 @@ const getRandomInteger = (a, b) => {
   const lower = Math.ceil(Math.min(a, b));
   const upper = Math.floor(Math.max(a, b));
   const result = Math.random() * (upper - lower + 1) + lower;
+
   return Math.floor(result);
 };
 
 const getRandomArrayElement = (elements) => elements[getRandomInteger(0, elements.length - 1)];
 
-const createIdGenerator = () => {
-  let lastGeneratedId = 0;
-
-  return () => {
-    lastGeneratedId += 1;
-    return lastGeneratedId;
-  };
-};
-
-const generateCommentId = createIdGenerator();
-
 const createMessage = () =>
   Array.from({ length: getRandomInteger(1, 2) }, () =>
-    getRandomArrayElement(COMMENT_LINES)).join(' ');
+    getRandomArrayElement(COMMENTS)).join(' ');
 
-const createComment = () => ({
-  id: generateCommentId(),
-  avatar: `img/avatar-${ getRandomInteger(1, AVATAR_COUNT) }.svg`,
+const createComment = (id) => ({
+  id,
+  avatar: `img/avatar-${ getRandomInteger(1, MAX_AVATAR_ID) }.svg`,
   message: createMessage(),
   name: getRandomArrayElement(NAMES),
 });
 
-const createFoto = (index) => ({
-  id: index,
-  url: `photos/${index}.jpg`,
+const createFoto = (id) => ({
+  id,
+  url: `photos/${id}.jpg`,
   description: getRandomArrayElement(DESCRIPTIONS),
-  likes: getRandomInteger(LIKE_MIN_COUNT, LIKE_MAX_COUNT),
-  comments: Array.from({ length: getRandomInteger(0, COMMENT_COUNT) },
-    createComment),
+  likes: getRandomInteger(MIN_LIKES, MAX_LIKES),
+  comments: Array.from({ length: getRandomInteger(0, MAX_COMMENTS) }, (_, commentIndex) =>
+    createComment (commentIndex + 1)),
 });
 
-const getFotos = () =>
-  Array.from({ length: FOTO_COUNT }, (_, fotoIndex) => createFoto(fotoIndex + 1));
+const getFotos = (count) =>
+  Array.from({ length: count }, (_, fotoIndex) => createFoto(fotoIndex + 1));
 
-getFotos();
+getFotos(25);
