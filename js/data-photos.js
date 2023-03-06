@@ -1,4 +1,4 @@
-import { getRandomInteger, getRandomArrayElement } from './util.js';
+import { getRandomInteger, getRandomArrayElement } from './utils.js';
 
 const MAX_AVATAR_ID = 6;
 const MIN_LIKES = 15;
@@ -55,9 +55,5 @@ const createFoto = (id) => ({
     createComment (commentIndex + 1)),
 });
 
-const getFotos = (count) =>
+export const getFotos = (count) =>
   Array.from({ length: count }, (_, fotoIndex) => createFoto(fotoIndex + 1));
-
-getFotos(25);
-
-export { getFotos };
