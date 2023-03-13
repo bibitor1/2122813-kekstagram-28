@@ -1,4 +1,4 @@
-import { getFotos } from './data-photos.js';
-import { renderMiniature } from './miniatures.js';
+import { getPhotos } from './photo-data.js';
+import { renderPhoto } from './photos.js';
 
-renderMiniature(getFotos());
+renderPhoto(getPhotos(25));
