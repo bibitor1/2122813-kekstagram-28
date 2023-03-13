@@ -46,7 +46,7 @@ const createComment = (id) => ({
   name: getRandomArrayElement(NAMES),
 });
 
-const createFoto = (id) => ({
+const createPhoto = (id) => ({
   id,
   url: `photos/${id}.jpg`,
   description: getRandomArrayElement(DESCRIPTIONS),
@@ -55,5 +55,5 @@ const createFoto = (id) => ({
     createComment (commentIndex + 1)),
 });
 
-export const getFotos = (count) =>
-  Array.from({ length: count }, (_, fotoIndex) => createFoto(fotoIndex + 1));
+export const getPhotos = (count) =>
+  Array.from({ length: count }, (_, fotoIndex) => createPhoto(fotoIndex + 1));
