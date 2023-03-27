@@ -1,9 +1,9 @@
 const COMMENT_AMOUNT = 5;
 
 const bigPicture = document.querySelector('.big-picture');
-const commentCount = document.querySelector('.social__comment-count');
-const commentList = document.querySelector('.social__comments');
-const commentsLoader = document.querySelector('.comments-loader');
+const shownCommentsAmount = document.querySelector('.social__comment-count');
+const visibleCommentsAmount = document.querySelector('.social__comments');
+const commentsLoaderButton = document.querySelector('.comments-loader');
 const cancelButton = document.querySelector('.big-picture__cancel');
 const commentTemplate = document.querySelector('#comment').content.querySelector('.social__comment');
 
@@ -20,15 +20,15 @@ const createComment = ({ avatar, name, message }) => {
   return comment;
 };
 
-const renderComments = (arr) => {
+const renderingComments = (arr) => {
   comments = arr;
   visibleComments += COMMENT_AMOUNT;
 
   if (visibleComments >= comments.length) {
-    commentsLoader.classList.add('hidden');
+    commentsLoaderButton.classList.add('hidden');
     visibleComments = comments.length;
   } else {
-    commentsLoader.classList.remove('hidden');
+    commentsLoaderButton.classList.remove('hidden');
   }
 
   const fragment = document.createDocumentFragment();
@@ -39,9 +39,9 @@ const renderComments = (arr) => {
     fragment.append(commentElement);
   }
 
-  commentList.innerHTML = '';
-  commentList.append(fragment);
-  commentCount.innerHTML = `${visibleComments} из <span class="comments-count">${comments.length}</span> комментариев`;
+  visibleCommentsAmount.innerHTML = '';
+  visibleCommentsAmount.append(fragment);
+  shownCommentsAmount.innerHTML = `${visibleComments} из <span class="comments-count">${comments.length}</span> комментариев`;
 };
 
 const hideBigPicture = () => {
@@ -52,7 +52,7 @@ const hideBigPicture = () => {
 
   visibleComments = 0;
 
-  commentsLoader.removeEventListener('click', onCommentsLoaderClick);
+  commentsLoaderButton.removeEventListener('click', onCommentsLoaderClick);
   cancelButton.removeEventListener('click', onCancselBottonClick);
 };
 
@@ -68,13 +68,13 @@ function onCancselBottonClick () {
 }
 
 function onCommentsLoaderClick () {
-  renderComments(comments);
+  renderingComments(comments);
 }
 
 export const showBigPicture = (data) => {
   bigPicture.classList.remove('hidden');
   document.body.classList.add('modal-open');
-  commentsLoader.classList.add('hidden');
+  commentsLoaderButton.classList.add('hidden');
 
   document.addEventListener('keydown', onDocumentKeydown);
 
@@ -83,8 +83,8 @@ export const showBigPicture = (data) => {
   bigPicture.querySelector('.likes-count').textContent = data.likes;
   bigPicture.querySelector('.social__caption').textContent = data.description;
 
-  renderComments(data.comments);
+  renderingComments(data.comments);
 
-  commentsLoader.addEventListener('click', onCommentsLoaderClick);
+  commentsLoaderButton.addEventListener('click', onCommentsLoaderClick);
   cancelButton.addEventListener('click', onCancselBottonClick);
 };

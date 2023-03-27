@@ -16,7 +16,7 @@ const createFoto = ({ comments, description, likes, url, id}) => {
   return photo;
 };
 
-export const renderPhoto = (pictures) => {
+export const renderingPhoto = (pictures) => {
   const fragment = document.createDocumentFragment();
 
   pictures.forEach((picture) => {

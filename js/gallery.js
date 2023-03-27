@@ -1,21 +1,22 @@
-import { renderPhoto } from './photos.js';
+import { renderingPhoto } from './photos.js';
 import { showBigPicture } from './big-photo.js';
 
 const container = document.querySelector('.pictures');
 
-export const renderGallery = (pictures) => {
-  container.addEventListener('click', (evt) => {
-    const photo = evt.target.closest('[data-photo-id]');
+const handlePhotoClick = (evt, pictures) => {
+  const photo = evt.target.closest('[data-photo-id]');
 
-    if (!photo) {
-      return;
-    }
+  if (!photo) {
+    return;
+  }
 
-    const picture = pictures.find(
-      (item) => item.id === +photo.dataset.photoId
-    );
-    showBigPicture(picture);
-  });
+  const picture = pictures.find(
+    (item) => item.id === +photo.dataset.photoId
+  );
+  showBigPicture(picture);
+};
 
-  renderPhoto(pictures, container);
+export const renderingGallery = (pictures) => {
+  container.addEventListener('click', (evt) => handlePhotoClick(evt, pictures));
+  renderingPhoto(pictures, container);
 };
