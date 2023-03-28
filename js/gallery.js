@@ -1,9 +1,7 @@
-import { renderingPhoto } from './photos.js';
+import { container, renderingPhoto } from './photos.js';
 import { showBigPicture } from './big-photo.js';
 
-const container = document.querySelector('.pictures');
-
-const handlePhotoClick = (evt, pictures) => {
+const onPhotoClick = (evt, pictures) => {
   const photo = evt.target.closest('[data-photo-id]');
 
   if (!photo) {
@@ -13,10 +11,12 @@ const handlePhotoClick = (evt, pictures) => {
   const picture = pictures.find(
     (item) => item.id === +photo.dataset.photoId
   );
+
   showBigPicture(picture);
 };
 
 export const renderingGallery = (pictures) => {
-  container.addEventListener('click', (evt) => handlePhotoClick(evt, pictures));
+  container.addEventListener('click', (evt) => onPhotoClick(evt, pictures));
+
   renderingPhoto(pictures, container);
 };

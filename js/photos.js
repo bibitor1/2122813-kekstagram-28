@@ -2,7 +2,7 @@ const photoTemplate = document.querySelector('#picture')
   .content
   .querySelector('.picture');
 
-const container = document.querySelector('.pictures');
+export const container = document.querySelector('.pictures');
 
 const createFoto = ({ comments, description, likes, url, id}) => {
   const photo = photoTemplate.cloneNode(true);

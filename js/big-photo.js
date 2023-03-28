@@ -20,28 +20,27 @@ const createComment = ({ avatar, name, message }) => {
   return comment;
 };
 
-const renderingComments = (arr) => {
-  comments = arr;
-  visibleComments += COMMENT_AMOUNT;
-
-  if (visibleComments >= comments.length) {
-    commentsLoaderButton.classList.add('hidden');
-    visibleComments = comments.length;
-  } else {
-    commentsLoaderButton.classList.remove('hidden');
-  }
-
+const renderingComments = () => {
   const fragment = document.createDocumentFragment();
 
-  for (let i = 0; i < visibleComments; i++) {
+  for (let i = visibleComments; i < Math.min(comments.length, visibleComments + COMMENT_AMOUNT); i++) {
     const commentElement = createComment(comments[i]);
 
     fragment.append(commentElement);
   }
 
-  visibleCommentsAmount.innerHTML = '';
+  visibleComments += COMMENT_AMOUNT;
+
   visibleCommentsAmount.append(fragment);
+
   shownCommentsAmount.innerHTML = `${visibleComments} из <span class="comments-count">${comments.length}</span> комментариев`;
+
+  if (visibleComments >= comments.length) {
+    commentsLoaderButton.classList.add('hidden');
+    shownCommentsAmount.innerHTML = `${comments.length} из <span class="comments-count">${comments.length}</span> комментариев`;
+  } else {
+    commentsLoaderButton.classList.remove('hidden');
+  }
 };
 
 const hideBigPicture = () => {
@@ -54,6 +53,8 @@ const hideBigPicture = () => {
 
   commentsLoaderButton.removeEventListener('click', onCommentsLoaderClick);
   cancelButton.removeEventListener('click', onCancselBottonClick);
+
+  visibleCommentsAmount.innerHTML = '';
 };
 
 function onDocumentKeydown(evt) {
@@ -68,7 +69,7 @@ function onCancselBottonClick () {
 }
 
 function onCommentsLoaderClick () {
-  renderingComments(comments);
+  renderingComments();
 }
 
 export const showBigPicture = (data) => {
@@ -83,7 +84,9 @@ export const showBigPicture = (data) => {
   bigPicture.querySelector('.likes-count').textContent = data.likes;
   bigPicture.querySelector('.social__caption').textContent = data.description;
 
-  renderingComments(data.comments);
+  comments = data.comments;
+
+  renderingComments();
 
   commentsLoaderButton.addEventListener('click', onCommentsLoaderClick);
   cancelButton.addEventListener('click', onCancselBottonClick);
