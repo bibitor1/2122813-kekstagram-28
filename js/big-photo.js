@@ -20,19 +20,18 @@ const createComment = ({ avatar, name, message }) => {
   return comment;
 };
 
-const renderingComments = () => {
+const renderComments = () => {
   const fragment = document.createDocumentFragment();
+  const visibleCommentsLimit = Math.min(comments.length, visibleComments + COMMENT_AMOUNT);
 
-  for (let i = visibleComments; i < Math.min(comments.length, visibleComments + COMMENT_AMOUNT); i++) {
+  for (let i = visibleComments; i < visibleCommentsLimit; i++) {
     const commentElement = createComment(comments[i]);
 
     fragment.append(commentElement);
   }
 
   visibleComments += COMMENT_AMOUNT;
-
   visibleCommentsAmount.append(fragment);
-
   shownCommentsAmount.innerHTML = `${visibleComments} из <span class="comments-count">${comments.length}</span> комментариев`;
 
   if (visibleComments >= comments.length) {
@@ -53,8 +52,6 @@ const hideBigPicture = () => {
 
   commentsLoaderButton.removeEventListener('click', onCommentsLoaderClick);
   cancelButton.removeEventListener('click', onCancselBottonClick);
-
-  visibleCommentsAmount.innerHTML = '';
 };
 
 function onDocumentKeydown(evt) {
@@ -69,7 +66,7 @@ function onCancselBottonClick () {
 }
 
 function onCommentsLoaderClick () {
-  renderingComments();
+  renderComments();
 }
 
 export const showBigPicture = (data) => {
@@ -86,7 +83,9 @@ export const showBigPicture = (data) => {
 
   comments = data.comments;
 
-  renderingComments();
+  visibleCommentsAmount.innerHTML = '';
+
+  renderComments();
 
   commentsLoaderButton.addEventListener('click', onCommentsLoaderClick);
   cancelButton.addEventListener('click', onCancselBottonClick);

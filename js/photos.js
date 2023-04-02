@@ -4,7 +4,7 @@ const photoTemplate = document.querySelector('#picture')
 
 export const container = document.querySelector('.pictures');
 
-const createFoto = ({ comments, description, likes, url, id}) => {
+export const createFoto = ({ comments, description, likes, url, id}) => {
   const photo = photoTemplate.cloneNode(true);
 
   photo.querySelector('.picture__img').src = url;
