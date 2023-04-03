@@ -32,11 +32,20 @@ const renderComments = () => {
 
   visibleComments += COMMENT_AMOUNT;
   visibleCommentsAmount.append(fragment);
-  shownCommentsAmount.innerHTML = `${visibleComments} из <span class="comments-count">${comments.length}</span> комментариев`;
+
+  const commentsCount = document.createElement('span');
+  commentsCount.classList.add('comments-count');
+  commentsCount.textContent = comments.length;
+
+  shownCommentsAmount.textContent = `${visibleComments} из `;
+  shownCommentsAmount.append(commentsCount);
+  shownCommentsAmount.append(' комментариев');
 
   if (visibleComments >= comments.length) {
     commentsLoaderButton.classList.add('hidden');
-    shownCommentsAmount.innerHTML = `${comments.length} из <span class="comments-count">${comments.length}</span> комментариев`;
+    shownCommentsAmount.textContent = `${comments.length} из `;
+    shownCommentsAmount.append(commentsCount);
+    shownCommentsAmount.append(' комментариев');
   } else {
     commentsLoaderButton.classList.remove('hidden');
   }
@@ -61,11 +70,11 @@ function onDocumentKeydown(evt) {
   }
 }
 
-function onCancselBottonClick () {
+function onCancselBottonClick() {
   hideBigPicture();
 }
 
-function onCommentsLoaderClick () {
+function onCommentsLoaderClick() {
   renderComments();
 }
 

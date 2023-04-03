@@ -1,7 +1,9 @@
-import { container, renderingPhoto } from './photos.js';
+import { createFoto } from './photos.js';
 import { showBigPicture } from './big-photo.js';
 
-const onPhotoClick = (evt, pictures) => {
+const container = document.querySelector('.pictures');
+
+const onGalleryClick = (evt, pictures) => {
   const photo = evt.target.closest('[data-photo-id]');
 
   if (!photo) {
@@ -15,8 +17,16 @@ const onPhotoClick = (evt, pictures) => {
   showBigPicture(picture);
 };
 
-export const renderingGallery = (pictures) => {
-  container.addEventListener('click', (evt) => onPhotoClick(evt, pictures));
+export const renderGallery = (pictures) => {
+  const fragment = document.createDocumentFragment();
 
-  renderingPhoto(pictures, container);
+  pictures.forEach((picture) => {
+    const photo = createFoto(picture);
+
+    fragment.append(photo);
+  });
+
+  container.append(fragment);
+
+  container.addEventListener('click', (evt) => onGalleryClick(evt, pictures));
 };
