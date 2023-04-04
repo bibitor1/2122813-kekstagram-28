@@ -8,6 +8,9 @@ const visibleCommentsCount = shownCommentsAmount.querySelector('.visible_comment
 const commentsLoaderButton = document.querySelector('.comments-loader');
 const cancelButton = document.querySelector('.big-picture__cancel');
 const commentTemplate = document.querySelector('#comment').content.querySelector('.social__comment');
+const bigPictureImg = bigPicture.querySelector('.big-picture__img img');
+const likesCount = bigPicture.querySelector('.likes-count');
+const socialCaption = bigPicture.querySelector('.social__caption');
 
 let visibleComments = 0;
 let comments = [];
@@ -80,10 +83,10 @@ export const showBigPicture = (data) => {
 
   document.addEventListener('keydown', onDocumentKeydown);
 
-  bigPicture.querySelector('.big-picture__img img').src = data.url;
-  bigPicture.querySelector('.big-picture__img img').alt = data.description;
-  bigPicture.querySelector('.likes-count').textContent = data.likes;
-  bigPicture.querySelector('.social__caption').textContent = data.description;
+  bigPictureImg.src = data.url;
+  bigPictureImg.alt = data.description;
+  likesCount.textContent = data.likes;
+  socialCaption.textContent = data.description;
 
   comments = data.comments;
   visibleCommentsAmount.innerHTML = '';

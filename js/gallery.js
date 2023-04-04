@@ -36,3 +36,5 @@ export const renderGallery = (pictures) => {
 };
 
 container.addEventListener('click', onGalleryClick);
+
+renderGallery(photos);
