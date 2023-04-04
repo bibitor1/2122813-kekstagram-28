@@ -3,20 +3,6 @@ import { showBigPicture } from './big-photo.js';
 
 const container = document.querySelector('.pictures');
 
-const onGalleryClick = (evt, pictures) => {
-  const photo = evt.target.closest('[data-photo-id]');
-
-  if (!photo) {
-    return;
-  }
-
-  const picture = pictures.find(
-    (item) => item.id === +photo.dataset.photoId
-  );
-
-  showBigPicture(picture);
-};
-
 export const renderGallery = (pictures) => {
   const fragment = document.createDocumentFragment();
 
@@ -28,5 +14,23 @@ export const renderGallery = (pictures) => {
 
   container.append(fragment);
 
-  container.addEventListener('click', (evt) => onGalleryClick(evt, pictures));
+  const onGalleryClick = (evt) => {
+    const photo = evt.target.closest('[data-photo-id]');
+
+    if (!photo) {
+      return;
+    }
+
+    const picture = pictures.find(
+      (item) => item.id === +photo.dataset.photoId
+    );
+
+    if (!picture) {
+      return;
+    }
+
+    showBigPicture(picture);
+  };
+
+  container.addEventListener('click', onGalleryClick);
 };

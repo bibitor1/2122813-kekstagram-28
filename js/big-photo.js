@@ -33,19 +33,16 @@ const renderComments = () => {
   visibleComments += COMMENT_AMOUNT;
   visibleCommentsAmount.append(fragment);
 
-  const commentsCount = document.createElement('span');
-  commentsCount.classList.add('comments-count');
-  commentsCount.textContent = comments.length;
 
-  shownCommentsAmount.textContent = `${visibleComments} из `;
-  shownCommentsAmount.append(commentsCount);
-  shownCommentsAmount.append(' комментариев');
+  const commentsCount = shownCommentsAmount.querySelector('.comments-count');
+  const visibleCommentsCount = shownCommentsAmount.querySelector('.visible_comments-count');
+
+  commentsCount.textContent = comments.length;
+  visibleCommentsCount.textContent = visibleComments;
 
   if (visibleComments >= comments.length) {
     commentsLoaderButton.classList.add('hidden');
-    shownCommentsAmount.textContent = `${comments.length} из `;
-    shownCommentsAmount.append(commentsCount);
-    shownCommentsAmount.append(' комментариев');
+    visibleCommentsCount.textContent = comments.length;
   } else {
     commentsLoaderButton.classList.remove('hidden');
   }
