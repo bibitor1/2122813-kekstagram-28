@@ -1,11 +1,16 @@
 const COMMENT_AMOUNT = 5;
 
 const bigPicture = document.querySelector('.big-picture');
-const commentCount = document.querySelector('.social__comment-count');
-const commentList = document.querySelector('.social__comments');
-const commentsLoader = document.querySelector('.comments-loader');
+const shownCommentsAmount = document.querySelector('.social__comment-count');
+const visibleCommentsAmount = document.querySelector('.social__comments');
+const commentsCount = shownCommentsAmount.querySelector('.comments-count');
+const visibleCommentsCount = shownCommentsAmount.querySelector('.visible_comments-count');
+const commentsLoaderButton = document.querySelector('.comments-loader');
 const cancelButton = document.querySelector('.big-picture__cancel');
 const commentTemplate = document.querySelector('#comment').content.querySelector('.social__comment');
+const bigPictureImg = bigPicture.querySelector('.big-picture__img img');
+const likesCount = bigPicture.querySelector('.likes-count');
+const socialCaption = bigPicture.querySelector('.social__caption');
 
 let visibleComments = 0;
 let comments = [];
@@ -20,28 +25,28 @@ const createComment = ({ avatar, name, message }) => {
   return comment;
 };
 
-const renderComments = (arr) => {
-  comments = arr;
-  visibleComments += COMMENT_AMOUNT;
-
-  if (visibleComments >= comments.length) {
-    commentsLoader.classList.add('hidden');
-    visibleComments = comments.length;
-  } else {
-    commentsLoader.classList.remove('hidden');
-  }
-
+const renderComments = () => {
   const fragment = document.createDocumentFragment();
+  const visibleCommentsLimit = Math.min(comments.length, visibleComments + COMMENT_AMOUNT);
 
-  for (let i = 0; i < visibleComments; i++) {
+  for (let i = visibleComments; i < visibleCommentsLimit; i++) {
     const commentElement = createComment(comments[i]);
 
     fragment.append(commentElement);
   }
 
-  commentList.innerHTML = '';
-  commentList.append(fragment);
-  commentCount.innerHTML = `${visibleComments} из <span class="comments-count">${comments.length}</span> комментариев`;
+  visibleComments += COMMENT_AMOUNT;
+  visibleCommentsAmount.append(fragment);
+
+  commentsCount.textContent = comments.length;
+  visibleCommentsCount.textContent = visibleComments;
+
+  if (visibleComments >= comments.length) {
+    commentsLoaderButton.classList.add('hidden');
+    visibleCommentsCount.textContent = comments.length;
+  } else {
+    commentsLoaderButton.classList.remove('hidden');
+  }
 };
 
 const hideBigPicture = () => {
@@ -52,7 +57,7 @@ const hideBigPicture = () => {
 
   visibleComments = 0;
 
-  commentsLoader.removeEventListener('click', onCommentsLoaderClick);
+  commentsLoaderButton.removeEventListener('click', onCommentsLoaderClick);
   cancelButton.removeEventListener('click', onCancselBottonClick);
 };
 
@@ -63,28 +68,31 @@ function onDocumentKeydown(evt) {
   }
 }
 
-function onCancselBottonClick () {
+function onCancselBottonClick() {
   hideBigPicture();
 }
 
-function onCommentsLoaderClick () {
-  renderComments(comments);
+function onCommentsLoaderClick() {
+  renderComments();
 }
 
 export const showBigPicture = (data) => {
   bigPicture.classList.remove('hidden');
   document.body.classList.add('modal-open');
-  commentsLoader.classList.add('hidden');
+  commentsLoaderButton.classList.add('hidden');
 
   document.addEventListener('keydown', onDocumentKeydown);
 
-  bigPicture.querySelector('.big-picture__img img').src = data.url;
-  bigPicture.querySelector('.big-picture__img img').alt = data.description;
-  bigPicture.querySelector('.likes-count').textContent = data.likes;
-  bigPicture.querySelector('.social__caption').textContent = data.description;
+  bigPictureImg.src = data.url;
+  bigPictureImg.alt = data.description;
+  likesCount.textContent = data.likes;
+  socialCaption.textContent = data.description;
 
-  renderComments(data.comments);
+  comments = data.comments;
+  visibleCommentsAmount.innerHTML = '';
 
-  commentsLoader.addEventListener('click', onCommentsLoaderClick);
+  renderComments();
+
+  commentsLoaderButton.addEventListener('click', onCommentsLoaderClick);
   cancelButton.addEventListener('click', onCancselBottonClick);
 };
