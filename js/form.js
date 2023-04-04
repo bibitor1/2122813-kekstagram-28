@@ -32,7 +32,7 @@ const isTextFiledFocused = () =>
   document.activeElement === hashtagField ||
   document.activeElement === commentField;
 
-function onDocumentKeydown (evt) {
+function onDocumentKeydown(evt) {
   if (evt.key === 'Escape' && !isTextFiledFocused()) {
     evt.preventDefault();
     hideModal();
@@ -47,23 +47,28 @@ const onFileInputChange = () => {
   showModal();
 };
 
-const isValidTag = (tag) => VALID_SYMBOLS.test(tag);
+const isTagValid = (tag) => VALID_SYMBOLS.test(tag);
 
-const hasValidCount = (tags) => tags.length <= MAX_HASHTAG_COUNT;
+const isTagCountValid = (tags) => tags.length <= MAX_HASHTAG_COUNT;
 
-const hasUniqueTags = (tags) => {
+const isTagsUnique = (tags) => {
   const loowerCaseTags = tags.map((tag) => tag.toLowerCase());
 
   return loowerCaseTags.length === new Set(loowerCaseTags).size;
 };
 
 const validateTags = (value) => {
-  const tags = value
-    .trim()
+  const trimmedValue = value.trim();
+
+  if (!trimmedValue) {
+    return false;
+  }
+
+  const tags = trimmedValue
     .split(' ')
     .filter((tag) => tag.trim().length);
 
-  return hasValidCount(tags) && hasUniqueTags(tags) && tags.every(isValidTag);
+  return isTagCountValid(tags) && isTagsUnique(tags) && tags.every(isTagValid);
 };
 
 pristine.addValidator(
