@@ -3,6 +3,8 @@ const COMMENT_AMOUNT = 5;
 const bigPicture = document.querySelector('.big-picture');
 const shownCommentsAmount = document.querySelector('.social__comment-count');
 const visibleCommentsAmount = document.querySelector('.social__comments');
+const commentsCount = shownCommentsAmount.querySelector('.comments-count');
+const visibleCommentsCount = shownCommentsAmount.querySelector('.visible_comments-count');
 const commentsLoaderButton = document.querySelector('.comments-loader');
 const cancelButton = document.querySelector('.big-picture__cancel');
 const commentTemplate = document.querySelector('#comment').content.querySelector('.social__comment');
@@ -32,10 +34,6 @@ const renderComments = () => {
 
   visibleComments += COMMENT_AMOUNT;
   visibleCommentsAmount.append(fragment);
-
-
-  const commentsCount = shownCommentsAmount.querySelector('.comments-count');
-  const visibleCommentsCount = shownCommentsAmount.querySelector('.visible_comments-count');
 
   commentsCount.textContent = comments.length;
   visibleCommentsCount.textContent = visibleComments;
@@ -88,7 +86,6 @@ export const showBigPicture = (data) => {
   bigPicture.querySelector('.social__caption').textContent = data.description;
 
   comments = data.comments;
-
   visibleCommentsAmount.innerHTML = '';
 
   renderComments();

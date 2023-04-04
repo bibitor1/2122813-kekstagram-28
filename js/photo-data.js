@@ -55,5 +55,5 @@ const createPhoto = (id) => ({
     createComment (commentIndex + 1)),
 });
 
-export const getPhotos = (count) =>
+export const createPhotosList = (count) =>
   Array.from({ length: count }, (_, fotoIndex) => createPhoto(fotoIndex + 1));
