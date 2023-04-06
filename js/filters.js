@@ -48,9 +48,8 @@ const FILTERS = {
     unit: '',
   },
 };
-const DEFAULT_FILTER = FILTERS.none;
 
-let activeFilter = DEFAULT_FILTER;
+let activeFilter = FILTERS.none;
 
 const imageElement = document.querySelector('.img-upload__preview img');
 const filtersElement = document.querySelector('.effects');
@@ -58,7 +57,7 @@ const sliderElement = document.querySelector('.effect-level__slider');
 const sliderContainerElement = document.querySelector('.img-upload__effect-level');
 const filterLevelElement = document.querySelector('.effect-level__value');
 
-const isDefaultFilterChosen = () => activeFilter === DEFAULT_FILTER;
+const isDefaultFilterChosen = () => activeFilter === FILTERS.none;
 
 const toggleSliderVisibility = (isVisible) => {
   if (isVisible) {
@@ -68,32 +67,36 @@ const toggleSliderVisibility = (isVisible) => {
   }
 };
 
-const updateSlider = (sliderConfig) => {
-  sliderElement.noUiSlider.updateOptions(sliderConfig);
+const updateSlider = ({min, max, step, start}) => {
+  sliderElement.noUiSlider.updateOptions({
+    range: {
+      min,
+      max
+    },
+    step,
+    start
+  });
 
   toggleSliderVisibility(!isDefaultFilterChosen());
 };
 
-const onFiltersChage = (evt) => {
+const onFiltersChange = (evt) => {
   if (!evt.target.classList.contains('effects__radio')) {
-
     return;
   }
 
   const filter = FILTERS[evt.target.value];
+
   if (filter) {
     activeFilter = filter;
     imageElement.className = `effects__preview--${activeFilter.name}`;
 
-    const sliderConfig = {
-      range: {
-        min: activeFilter.min,
-        max: activeFilter.max,
-      },
+    updateSlider({
+      min: activeFilter.min,
+      max: activeFilter.max,
       step: activeFilter.step,
-      start: activeFilter.max,
-    };
-    updateSlider(sliderConfig);
+      start: activeFilter.max
+    });
   }
 };
 
@@ -101,27 +104,27 @@ const onSliderUpdate = () => {
   const sliderValue = sliderElement.noUiSlider.get();
 
   imageElement.style.filter = isDefaultFilterChosen()
-    ? DEFAULT_FILTER.style
+    ? FILTERS.none.style
     : `${activeFilter.style}(${sliderValue}${activeFilter.unit})`;
   filterLevelElement.value = sliderValue;
 };
 
 export const resetFilters = () => {
-  activeFilter = DEFAULT_FILTER;
+  activeFilter = FILTERS.none;
   updateSlider(activeFilter);
 };
 
 noUiSlider.create(sliderElement, {
   range: {
-    min: DEFAULT_FILTER.min,
-    max: DEFAULT_FILTER.max,
+    min: FILTERS.none.min,
+    max: FILTERS.none.max,
   },
-  start: DEFAULT_FILTER.max,
-  step: DEFAULT_FILTER.step,
+  start: FILTERS.none.max,
+  step: FILTERS.none.step,
   connect: 'lower',
 });
 
 toggleSliderVisibility(false);
 
-filtersElement.addEventListener('change', onFiltersChage);
+filtersElement.addEventListener('change', onFiltersChange);
 sliderElement.noUiSlider.on('update', onSliderUpdate);

@@ -13,20 +13,14 @@ const scaleImage = (value) => {
   scaleInput.value = `${value}%`;
 };
 
-const onScaleButtonClick = (event) => {
+const onScaleButtonClick = (evt) => {
   const currentValue = parseInt(scaleInput.value, 10);
   let newValue;
 
-  if (event.target === zoomOutButton) {
-    newValue = currentValue - SCALE_STEP;
-    if (newValue < MIN_SCALE) {
-      newValue = MIN_SCALE;
-    }
+  if (evt.target === zoomOutButton) {
+    newValue = Math.max(MIN_SCALE, currentValue - SCALE_STEP);
   } else {
-    newValue = currentValue + SCALE_STEP;
-    if (newValue > MAX_SCALE) {
-      newValue = MAX_SCALE;
-    }
+    newValue = Math.min(MAX_SCALE, currentValue + SCALE_STEP);
   }
 
   scaleImage(newValue);
