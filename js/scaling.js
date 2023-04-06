@@ -3,37 +3,36 @@ const MIN_SCALE = 25;
 const MAX_SCALE = 100;
 const DEFAULT_SCALE = 100;
 
-const smallerZoomButton = document.querySelector('.scale__control--smaller');
-const biggerZoomButton = document.querySelector('.scale__control--bigger');
+const zoomOutButton = document.querySelector('.scale__control--smaller');
+const zoomInButton = document.querySelector('.scale__control--bigger');
 const scaleInput = document.querySelector('.scale__control--value');
-const ImageScalePreview = document.querySelector('.img-upload__preview img');
+const imageScalePreview = document.querySelector('.img-upload__preview img');
 
 const scaleImage = (value) => {
-  ImageScalePreview.style.transform = `scale(${value / 100})`;
+  imageScalePreview.style.transform = `scale(${value / 100})`;
   scaleInput.value = `${value}%`;
 };
 
-const onSmallerButtonClik = () => {
+const onScaleButtonClick = (event) => {
   const currentValue = parseInt(scaleInput.value, 10);
-  let newValue = currentValue - SCALE_STEP;
+  let newValue;
 
-  if (newValue < MIN_SCALE) {
-    newValue = MIN_SCALE;
+  if (event.target === zoomOutButton) {
+    newValue = currentValue - SCALE_STEP;
+    if (newValue < MIN_SCALE) {
+      newValue = MIN_SCALE;
+    }
+  } else {
+    newValue = currentValue + SCALE_STEP;
+    if (newValue > MAX_SCALE) {
+      newValue = MAX_SCALE;
+    }
   }
-  scaleImage(newValue);
-};
 
-const onBiggerButtonClick = () => {
-  const currentValue = parseInt(scaleInput.value, 10);
-  let newValue = currentValue + SCALE_STEP;
-
-  if (newValue < MAX_SCALE) {
-    newValue = MAX_SCALE;
-  }
   scaleImage(newValue);
 };
 
 export const resetScale = () => scaleImage(DEFAULT_SCALE);
 
-smallerZoomButton.addEventListener('click', onSmallerButtonClik);
-biggerZoomButton.addEventListener('click', onBiggerButtonClick);
+zoomOutButton.addEventListener('click', onScaleButtonClick);
+zoomInButton.addEventListener('click', onScaleButtonClick);

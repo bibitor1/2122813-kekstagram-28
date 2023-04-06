@@ -1,5 +1,5 @@
 import { resetScale } from './scaling.js';
-import { resetEffects } from './effects.js';
+import { resetFilters } from './filters.js';
 
 const MAX_HASHTAG_COUNT = 5;
 const VALID_SYMBOLS = /^#[a-zа-яё0-9]{1,19}$/i;
@@ -21,7 +21,7 @@ const showModal = () => {
   overlay.classList.remove('hidden');
   document.body.classList.add('modal-open');
   resetScale();
-  resetEffects();
+  resetFilters();
   document.addEventListener('keydown', onDocumentKeydown);
 };
 
