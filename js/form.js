@@ -1,3 +1,6 @@
+import { resetScale } from './scaling.js';
+import { resetFilters } from './filters.js';
+
 const MAX_HASHTAG_COUNT = 5;
 const VALID_SYMBOLS = /^#[a-zа-яё0-9]{1,19}$/i;
 const TAG_ERROR_TEXT = 'Неправильно заполнены хэштеги';
@@ -17,6 +20,8 @@ const pristine = new Pristine(form, {
 const showModal = () => {
   overlay.classList.remove('hidden');
   document.body.classList.add('modal-open');
+  resetScale();
+  resetFilters();
   document.addEventListener('keydown', onDocumentKeydown);
 };
 
@@ -65,8 +70,7 @@ const validateTags = (value) => {
   }
 
   const tags = trimmedValue
-    .split(' ')
-    .filter((tag) => tag.trim().length);
+    .split(/\s+/);
 
   return isTagCountValid(tags) && isTagsUnique(tags) && tags.every(isTagValid);
 };
