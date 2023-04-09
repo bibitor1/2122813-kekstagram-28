@@ -1,16 +1,19 @@
+import { getData } from './api.js';
+import { showAlert } from './dialogs.js';
 import { createPhoto } from './photos.js';
 import { showBigPicture } from './big-photo.js';
 
 const container = document.querySelector('.pictures');
+let photos = [];
 
-const onGalleryClick = (evt, pictures) => {
+const onGalleryClick = (evt) => {
   const photo = evt.target.closest('[data-photo-id]');
 
   if (!photo) {
     return;
   }
 
-  const picture = pictures.find(
+  const picture = photos.find(
     (item) => item.id === +photo.dataset.photoId
   );
 
@@ -21,16 +24,25 @@ const onGalleryClick = (evt, pictures) => {
   showBigPicture(picture);
 };
 
-export const renderGallery = (data) => {
+export const renderGallery = (pictures) => {
   const fragment = document.createDocumentFragment();
 
-  data.forEach((picture) => {
+  pictures.forEach((picture) => {
     const photo = createPhoto(picture);
 
     fragment.append(photo);
   });
 
   container.append(fragment);
-
-  container.addEventListener('click', (evt) => onGalleryClick(evt, data));
 };
+
+getData()
+  .then((data) => {
+    photos = data;
+    renderGallery(photos);
+  })
+  .catch((err) => {
+    showAlert(err.message);
+  });
+
+container.addEventListener('click', onGalleryClick);

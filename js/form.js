@@ -1,5 +1,7 @@
 import { resetScale } from './scaling.js';
 import { resetFilters } from './filters.js';
+import { sendData } from './api.js';
+import { showDialog } from './dialogs.js';
 
 const MAX_HASHTAG_COUNT = 5;
 const VALID_SYMBOLS = /^#[a-zа-яё0-9]{1,19}$/i;
@@ -12,13 +14,15 @@ const fileField = document.querySelector('#upload-file');
 const hashtagField = document.querySelector('.text__hashtags');
 const commentField = document.querySelector('.text__description');
 const submitButton = form.querySelector('.img-upload__submit');
+const successMessage = document.querySelector('#success');
+const errorMessage = document.querySelector('#error');
 
 const pristine = new Pristine(form, {
   classTo: 'img-upload__field-wrapper',
   errorTextParent: 'img-upload__field-wrapper',
 });
 
-const showModal = () => {
+const showModalWindow = () => {
   overlay.classList.remove('hidden');
   document.body.classList.add('modal-open');
   resetScale();
@@ -26,7 +30,7 @@ const showModal = () => {
   document.addEventListener('keydown', onDocumentKeydown);
 };
 
-export const hideModal = () => {
+const hideModalWindow = () => {
   form.reset();
   pristine.reset();
   overlay.classList.add('hidden');
@@ -41,16 +45,16 @@ const isTextFiledFocused = () =>
 function onDocumentKeydown(evt) {
   if (evt.key === 'Escape' && !isTextFiledFocused()) {
     evt.preventDefault();
-    hideModal();
+    hideModalWindow();
   }
 }
 
 const onCancelButtonClick = () => {
-  hideModal();
+  hideModalWindow();
 };
 
 const onFileInputChange = () => {
-  showModal();
+  showModalWindow();
 };
 
 const isTagValid = (tag) => VALID_SYMBOLS.test(tag);
@@ -90,18 +94,42 @@ const unblockSubmitButton = () => {
   submitButton.disabled = false;
 };
 
-export const setOnFormSubmit = (cb) => {
-  form.addEventListener('submit', async (evt) => {
+const setOnFormSubmit = (cb) => {
+  form.addEventListener('submit', (evt) => {
     evt.preventDefault();
+
     const isValid = pristine.validate();
 
-    if(isValid) {
+    if (isValid) {
       blockSubmitButton();
-      await cb(new FormData(form));
-      unblockSubmitButton();
+
+      cb(new FormData(form))
+        .then(() => {
+          unblockSubmitButton();
+          showDialog(successMessage);
+        })
+        .catch(() => {
+          unblockSubmitButton();
+          showDialog(errorMessage);
+        });
     }
   });
 };
+
+const sendFormToServer = () => {
+  setOnFormSubmit((data) => {
+    sendData(data)
+      .then(() => {
+        hideModalWindow();
+        showDialog(successMessage);
+      })
+      .catch(() => {
+        showDialog(errorMessage);
+      });
+  });
+};
+
+sendFormToServer();
 
 fileField.addEventListener('change', onFileInputChange);
 cancelButton.addEventListener('click', onCancelButtonClick);
