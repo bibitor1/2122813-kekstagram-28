@@ -71,7 +71,7 @@ const validateTags = (value) => {
   const trimmedValue = value.trim();
 
   if (!trimmedValue) {
-    return false;
+    return true;
   }
 
   const tags = trimmedValue
@@ -90,12 +90,14 @@ const toggleSubmitButton = (disabled) => {
   submitButton.disabled = disabled;
 };
 
-const sendFormToServer = () => {
+const onFormSubmit = () => {
   const isValid = pristine.validate();
 
   if (isValid) {
     toggleSubmitButton(true);
+
     const data = new FormData(form);
+
     sendData(data)
       .then(() => {
         toggleSubmitButton(false);
@@ -111,7 +113,7 @@ const sendFormToServer = () => {
 
 form.addEventListener('submit', (evt) => {
   evt.preventDefault();
-  sendFormToServer();
+  onFormSubmit();
 });
 
 fileField.addEventListener('change', onFileInputChange);

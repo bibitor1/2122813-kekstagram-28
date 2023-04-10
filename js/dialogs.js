@@ -5,28 +5,31 @@ export const showDialog = (template) => {
 
   document.body.appendChild(message);
 
-  const button = message.querySelector('.button');
+  const button = message.querySelector('button[type="button"]');
 
-  const OnKeyDown = (evt) => {
+  const onKeyDown = (evt) => {
     if (evt.key === 'Escape') {
       message.remove();
-      document.removeEventListener('keydown', OnKeyDown);
+      document.removeEventListener('keydown', onKeyDown);
     }
+  };
+
+  const removeListener = () => {
+    message.remove();
+    document.removeEventListener('keydown', onKeyDown);
   };
 
   if (button) {
     button.addEventListener('click', () => {
-      message.remove();
-      document.removeEventListener('keydown', OnKeyDown);
+      removeListener();
     });
   }
 
-  document.addEventListener('keydown', OnKeyDown);
+  document.addEventListener('keydown', onKeyDown);
 
   message.addEventListener('click', (evt) => {
-    if (!evt.target.closest('.inner')) {
-      message.remove();
-      document.removeEventListener('keydown', OnKeyDown);
+    if (!evt.target.closest('[class*="__inner"]')) {
+      removeListener();
     }
   });
 };
