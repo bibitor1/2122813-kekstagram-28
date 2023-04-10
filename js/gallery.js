@@ -1,9 +1,10 @@
+import { getData } from './api.js';
+import { showAlert } from './dialogs.js';
 import { createPhoto } from './photos.js';
 import { showBigPicture } from './big-photo.js';
-import { createPhotosList } from './photo-data.js';
 
 const container = document.querySelector('.pictures');
-const photos = createPhotosList(25);
+let photos = [];
 
 const onGalleryClick = (evt) => {
   const photo = evt.target.closest('[data-photo-id]');
@@ -35,6 +36,13 @@ export const renderGallery = (pictures) => {
   container.append(fragment);
 };
 
-container.addEventListener('click', onGalleryClick);
+getData()
+  .then((data) => {
+    photos = data;
+    renderGallery(photos);
+  })
+  .catch((err) => {
+    showAlert(err.message);
+  });
 
-renderGallery(photos);
+container.addEventListener('click', onGalleryClick);
