@@ -7,46 +7,37 @@ export const showDialog = (template) => {
 
   const button = message.querySelector('.button');
 
+  const OnKeyDown = (evt) => {
+    if (evt.key === 'Escape') {
+      message.remove();
+      document.removeEventListener('keydown', OnKeyDown);
+    }
+  };
+
   if (button) {
     button.addEventListener('click', () => {
       message.remove();
+      document.removeEventListener('keydown', OnKeyDown);
     });
   }
 
-  window.addEventListener('keydown', (evt) => {
-    if (evt.key === 'Escape') {
-      message.remove();
-    }
-  });
+  document.addEventListener('keydown', OnKeyDown);
 
   message.addEventListener('click', (evt) => {
     if (!evt.target.closest('.inner')) {
       message.remove();
+      document.removeEventListener('keydown', OnKeyDown);
     }
   });
 };
 
-class Alert {
-  constructor(message) {
-    this.message = message;
-    this.alert = document.createElement('div');
-    this.alert.classList.add('alert');
-    this.alert.textContent = this.message;
-    document.body.append(this.alert);
-  }
-
-  hide() {
-    this.alert.remove();
-  }
-
-  show() {
-    setTimeout(() => {
-      this.hide();
-    }, ALERT_SHOW_TIME);
-  }
-}
-
 export const showAlert = (message) => {
-  const alert = new Alert(message);
-  alert.show();
+  const alert = document.createElement('div');
+  alert.classList.add('alert');
+  alert.textContent = message;
+  document.body.append(alert);
+
+  setTimeout(() => {
+    alert.remove();
+  }, ALERT_SHOW_TIME);
 };

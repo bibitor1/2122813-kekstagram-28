@@ -22,7 +22,7 @@ const pristine = new Pristine(form, {
   errorTextParent: 'img-upload__field-wrapper',
 });
 
-const showModalWindow = () => {
+const showOverlay = () => {
   overlay.classList.remove('hidden');
   document.body.classList.add('modal-open');
   resetScale();
@@ -30,7 +30,7 @@ const showModalWindow = () => {
   document.addEventListener('keydown', onDocumentKeydown);
 };
 
-const hideModalWindow = () => {
+const hideOverlay = () => {
   form.reset();
   pristine.reset();
   overlay.classList.add('hidden');
@@ -45,16 +45,16 @@ const isTextFiledFocused = () =>
 function onDocumentKeydown(evt) {
   if (evt.key === 'Escape' && !isTextFiledFocused()) {
     evt.preventDefault();
-    hideModalWindow();
+    hideOverlay();
   }
 }
 
 const onCancelButtonClick = () => {
-  hideModalWindow();
+  hideOverlay();
 };
 
 const onFileInputChange = () => {
-  showModalWindow();
+  showOverlay();
 };
 
 const isTagValid = (tag) => VALID_SYMBOLS.test(tag);
@@ -86,50 +86,33 @@ pristine.addValidator(
   TAG_ERROR_TEXT
 );
 
-const blockSubmitButton = () => {
-  submitButton.disabled = true;
-};
-
-const unblockSubmitButton = () => {
-  submitButton.disabled = false;
-};
-
-const setOnFormSubmit = (cb) => {
-  form.addEventListener('submit', (evt) => {
-    evt.preventDefault();
-
-    const isValid = pristine.validate();
-
-    if (isValid) {
-      blockSubmitButton();
-
-      cb(new FormData(form))
-        .then(() => {
-          unblockSubmitButton();
-          showDialog(successMessage);
-        })
-        .catch(() => {
-          unblockSubmitButton();
-          showDialog(errorMessage);
-        });
-    }
-  });
+const toggleSubmitButton = (disabled) => {
+  submitButton.disabled = disabled;
 };
 
 const sendFormToServer = () => {
-  setOnFormSubmit((data) => {
+  const isValid = pristine.validate();
+
+  if (isValid) {
+    toggleSubmitButton(true);
+    const data = new FormData(form);
     sendData(data)
       .then(() => {
-        hideModalWindow();
+        toggleSubmitButton(false);
+        hideOverlay();
         showDialog(successMessage);
       })
       .catch(() => {
+        toggleSubmitButton(false);
         showDialog(errorMessage);
       });
-  });
+  }
 };
 
-sendFormToServer();
+form.addEventListener('submit', (evt) => {
+  evt.preventDefault();
+  sendFormToServer();
+});
 
 fileField.addEventListener('change', onFileInputChange);
 cancelButton.addEventListener('click', onCancelButtonClick);
