@@ -7,17 +7,16 @@ export const showDialog = (template) => {
 
   const button = element.querySelector('button[type="button"]');
 
-  const onDocumentKeydown = (evt) => {
-    if (evt.key === 'Escape') {
-      element.remove();
-      document.removeEventListener('keydown', onDocumentKeydown);
-    }
-  };
-
   const removeDialog = () => {
     element.remove();
     document.removeEventListener('keydown', onDocumentKeydown);
   };
+
+  function onDocumentKeydown(evt) {
+    if (evt.key === 'Escape') {
+      removeDialog();
+    }
+  }
 
   if (button) {
     button.addEventListener('click', () => {

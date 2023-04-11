@@ -5,6 +5,8 @@ import { showAlert } from './dialogs.js';
 import { createPhoto } from './photos.js';
 import { showBigPicture } from './big-photo.js';
 
+const RERENDER_DELAY = 500;
+
 const container = document.querySelector('.pictures');
 let photos = [];
 
@@ -27,6 +29,7 @@ const onGalleryClick = (evt) => {
 };
 
 const renderGallery = (pictures) => {
+  container.querySelectorAll('.picture').forEach((element) => element.remove());
   const fragment = document.createDocumentFragment();
 
   pictures.forEach((picture) => {
@@ -38,15 +41,10 @@ const renderGallery = (pictures) => {
   container.append(fragment);
 };
 
-const renderFilteredGallery = (pictures) => {
-  container.querySelectorAll('.picture').forEach((element) => element.remove());
-  renderGallery(pictures);
-};
-
 const updateGallery = debounce((filter) => {
   const filteredPictures = getFilteredPictures(filter, photos);
-  renderFilteredGallery(filteredPictures);
-}, 500);
+  renderGallery(filteredPictures);
+}, RERENDER_DELAY);
 
 getData()
   .then((data) => {

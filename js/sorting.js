@@ -9,11 +9,10 @@ const filterElement = document.querySelector('.img-filters');
 let currentFilter = Filter.DEFAULT;
 let pictures = [];
 
-const sortRandomly = () => Math.random() - 0.5;
-
-const sortByComments = (pictureA, pictureB) => pictureB.comments.length - pictureA.comments.length;
-
 export const getFilteredPictures = () => {
+  const sortRandomly = () => Math.random() - 0.5;
+  const sortByComments = (pictureA, pictureB) => pictureB.comments.length - pictureA.comments.length;
+
   switch (currentFilter) {
     case Filter.RANDOM:
       return [...pictures].sort(sortRandomly).slice(0, PICTURES_COUNT);
@@ -30,7 +29,8 @@ const onFilterClick = (cb) => {
       return;
     }
 
-    const clickedButton = evt.target;
+    const { target: clickedButton } = evt;
+
     if (clickedButton.id === currentFilter) {
       return;
     }
