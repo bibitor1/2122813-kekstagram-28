@@ -1,35 +1,35 @@
 const ALERT_SHOW_TIME = 5000;
 
 export const showDialog = (template) => {
-  const message = template.content.firstElementChild.cloneNode(true);
+  const element = template.content.firstElementChild.cloneNode(true);
 
-  document.body.appendChild(message);
+  document.body.appendChild(element);
 
-  const button = message.querySelector('button[type="button"]');
+  const button = element.querySelector('button[type="button"]');
 
-  const onKeyDown = (evt) => {
+  const onDocumentKeydown = (evt) => {
     if (evt.key === 'Escape') {
-      message.remove();
-      document.removeEventListener('keydown', onKeyDown);
+      element.remove();
+      document.removeEventListener('keydown', onDocumentKeydown);
     }
   };
 
-  const removeListener = () => {
-    message.remove();
-    document.removeEventListener('keydown', onKeyDown);
+  const removeDialog = () => {
+    element.remove();
+    document.removeEventListener('keydown', onDocumentKeydown);
   };
 
   if (button) {
     button.addEventListener('click', () => {
-      removeListener();
+      removeDialog();
     });
   }
 
-  document.addEventListener('keydown', onKeyDown);
+  document.addEventListener('keydown', onDocumentKeydown);
 
-  message.addEventListener('click', (evt) => {
+  element.addEventListener('click', (evt) => {
     if (!evt.target.closest('[class*="__inner"]')) {
-      removeListener();
+      removeDialog();
     }
   });
 };
