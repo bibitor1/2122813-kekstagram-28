@@ -45,7 +45,10 @@ const isTextFiledFocused = () =>
 function onDocumentKeydown(evt) {
   if (evt.key === 'Escape' && !isTextFiledFocused()) {
     evt.preventDefault();
-    hideOverlay();
+
+    if (document.body.classList.contains('modal-open') && errorMessage.classList.contains('hidden')) {
+      hideOverlay();
+    }
   }
 }
 
