@@ -1,3 +1,5 @@
+import { isEscapeKey } from './utils.js';
+
 const COMMENT_AMOUNT = 5;
 
 const bigPicture = document.querySelector('.big-picture');
@@ -58,17 +60,17 @@ const hideBigPicture = () => {
   visibleComments = 0;
 
   commentsLoaderButton.removeEventListener('click', onCommentsLoaderClick);
-  cancelButton.removeEventListener('click', onCancselBottonClick);
+  cancelButton.removeEventListener('click', onCancelButtonClick);
 };
 
 function onDocumentKeydown(evt) {
-  if (evt.key === 'Escape') {
+  if (isEscapeKey(evt)) {
     evt.preventDefault();
     hideBigPicture();
   }
 }
 
-function onCancselBottonClick() {
+function onCancelButtonClick() {
   hideBigPicture();
 }
 
@@ -94,5 +96,5 @@ export const showBigPicture = (data) => {
   renderComments();
 
   commentsLoaderButton.addEventListener('click', onCommentsLoaderClick);
-  cancelButton.addEventListener('click', onCancselBottonClick);
+  cancelButton.addEventListener('click', onCancelButtonClick);
 };

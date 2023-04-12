@@ -2,6 +2,7 @@ import { resetScale } from './scaling.js';
 import { resetFilters } from './filters.js';
 import { sendData } from './api.js';
 import { showDialog } from './dialogs.js';
+import { isEscapeKey } from './utils.js';
 
 const MAX_HASHTAG_COUNT = 5;
 const VALID_SYMBOLS = /^#[a-zа-яё0-9]{1,19}$/i;
@@ -42,11 +43,15 @@ const isTextFiledFocused = () =>
   document.activeElement === hashtagField ||
   document.activeElement === commentField;
 
+const getMessageType = () => document.querySelector('.error, .success');
+
 function onDocumentKeydown(evt) {
-  if (evt.key === 'Escape' && !isTextFiledFocused()) {
+  if (isEscapeKey(evt) && !isTextFiledFocused()) {
     evt.preventDefault();
 
-    if (document.body.classList.contains('modal-open') && errorMessage.classList.contains('hidden')) {
+    const messageType = getMessageType();
+
+    if (!messageType) {
       hideOverlay();
     }
   }

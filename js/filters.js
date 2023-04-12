@@ -51,24 +51,24 @@ const FILTERS = {
 
 let activeFilter = FILTERS.none;
 
-const imageElement = document.querySelector('.img-upload__preview img');
-const filtersElement = document.querySelector('.effects');
-const sliderElement = document.querySelector('.effect-level__slider');
-const sliderContainerElement = document.querySelector('.img-upload__effect-level');
-const filterLevelElement = document.querySelector('.effect-level__value');
+const imagePreview = document.querySelector('.img-upload__preview img');
+const filters = document.querySelector('.effects');
+const slider = document.querySelector('.effect-level__slider');
+const sliderContainer = document.querySelector('.img-upload__effect-level');
+const filterLevel = document.querySelector('.effect-level__value');
 
 const isDefaultFilterChosen = () => activeFilter === FILTERS.none;
 
 const toggleSliderVisibility = (isVisible) => {
   if (isVisible) {
-    sliderContainerElement.classList.remove('hidden');
+    sliderContainer.classList.remove('hidden');
   } else {
-    sliderContainerElement.classList.add('hidden');
+    sliderContainer.classList.add('hidden');
   }
 };
 
 const updateSlider = ({min, max, step, start}) => {
-  sliderElement.noUiSlider.updateOptions({
+  slider.noUiSlider.updateOptions({
     range: {
       min,
       max
@@ -89,7 +89,7 @@ const onFiltersChange = (evt) => {
 
   if (filter) {
     activeFilter = filter;
-    imageElement.className = `effects__preview--${activeFilter.name}`;
+    imagePreview.className = `effects__preview--${activeFilter.name}`;
 
     updateSlider({
       min: activeFilter.min,
@@ -101,12 +101,12 @@ const onFiltersChange = (evt) => {
 };
 
 const onSliderUpdate = () => {
-  const sliderValue = sliderElement.noUiSlider.get();
+  const sliderValue = slider.noUiSlider.get();
 
-  imageElement.style.filter = isDefaultFilterChosen()
+  imagePreview.style.filter = isDefaultFilterChosen()
     ? FILTERS.none.style
     : `${activeFilter.style}(${sliderValue}${activeFilter.unit})`;
-  filterLevelElement.value = sliderValue;
+  filterLevel.value = sliderValue;
 };
 
 export const resetFilters = () => {
@@ -114,7 +114,7 @@ export const resetFilters = () => {
   updateSlider(activeFilter);
 };
 
-noUiSlider.create(sliderElement, {
+noUiSlider.create(slider, {
   range: {
     min: FILTERS.none.min,
     max: FILTERS.none.max,
@@ -126,5 +126,5 @@ noUiSlider.create(sliderElement, {
 
 toggleSliderVisibility(false);
 
-filtersElement.addEventListener('change', onFiltersChange);
-sliderElement.noUiSlider.on('update', onSliderUpdate);
+filters.addEventListener('change', onFiltersChange);
+slider.noUiSlider.on('update', onSliderUpdate);
