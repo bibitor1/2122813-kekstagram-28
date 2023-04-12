@@ -1,9 +1,11 @@
+import { isEscapeKey } from './utils.js';
+
 const ALERT_SHOW_TIME = 5000;
 
 export const showDialog = (template) => {
   const element = template.content.firstElementChild.cloneNode(true);
 
-  document.body.appendChild(element);
+  document.body.append(element);
 
   const button = element.querySelector('button[type="button"]');
 
@@ -13,7 +15,7 @@ export const showDialog = (template) => {
   };
 
   function onDocumentKeydown(evt) {
-    if (evt.key === 'Escape') {
+    if (isEscapeKey(evt)) {
       removeDialog();
     }
   }
